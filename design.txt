@@ -1,0 +1,19 @@
+---- FEATURES ----
+
+1. REGISTER
+- Method: POST
+- Path: /auth/REGISTER
+- BODY: firstName, lastName, email, password, confirmPassword
+- RESPONSE:
+    201 { accessToken: String}
+    400 { message: String }
+    500 { message: String }
+
+2. LOGIN
+- Method: POST
+- Path: /auth/login 
+- BODY: email, password
+- RESPONSE:
+    200 { accessToken: String }
+    400 { message: String }
+    500 { message: String }
