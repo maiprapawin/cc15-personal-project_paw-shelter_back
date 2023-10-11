@@ -28,7 +28,7 @@ exports.register = async (req, res, next) => {
       process.env.JWT_SECRET_KEY || "dkfjldfjlkdfssddd",
       { expiresIn: process.env.JWT_EXPIRE }
     );
-    res.status(201).json({ accessToken });
+    res.status(201).json({ accessToken, user });
   } catch (err) {
     next(err);
   }
@@ -70,4 +70,8 @@ exports.login = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+exports.getMe = (req, res, next) => {
+  res.status(200).json({ user: req.user });
 };
