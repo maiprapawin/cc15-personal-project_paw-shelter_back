@@ -2,7 +2,7 @@
 
 1. REGISTER
 - Method: POST
-- Path: /auth/REGISTER
+- Path: /auth/register
 - BODY: {firstName, lastName, email, password, confirmPassword}
 - RESPONSE:
     201 { accessToken: String}
