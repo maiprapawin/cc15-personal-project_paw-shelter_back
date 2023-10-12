@@ -13,6 +13,7 @@ const registerSchema = Joi.object({
     .trim()
     .required()
     .strip(),
+  isAdmin: Joi.boolean(),
 });
 
 exports.registerSchema = registerSchema;
