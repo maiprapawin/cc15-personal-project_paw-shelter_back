@@ -15,4 +15,16 @@ router.post(
   dogController.createDog
 );
 
+// 2. READ
+router.get("/read", authenticateMiddleware, dogController.readAllDogs);
+
+// 3. UPDATE
+router.patch(
+  "/update",
+  authenticateMiddleware,
+  adminAuthenticateMiddleware,
+  uploadMiddleware.single("dogImage"),
+  dogController.updateDog
+);
+
 module.exports = router;

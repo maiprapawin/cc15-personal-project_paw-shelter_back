@@ -1,5 +1,8 @@
 const fs = require("fs/promises");
-const { createDogSchema } = require("../validators/dog-validator");
+const {
+  createDogSchema,
+  updateDogSchema,
+} = require("../validators/dog-validator");
 const prisma = require("../models/prisma");
 const { uploadToCloudinary } = require("../utils/cloudinary-service");
 const createError = require("../utils/create-error");
@@ -26,5 +29,40 @@ exports.createDog = async (req, res, next) => {
     next(err);
   } finally {
     fs.unlink(req.file.path); //ลบรูปออกจากโฟล์เดอร์ public
+  }
+};
+
+exports.readAllDogs = async (req, res, next) => {
+  try {
+    const dogs = await prisma.dog.findMany();
+    res.status(200).json({ dogs });
+  } catch (err) {
+    next(err);
+  }
+};
+
+exports.updateDog = async (req, res, next) => {
+  try {
+    const { value, error } = updateDogSchema.validate(req.body);
+    if (error) {
+      return next(error);
+    }
+
+    req.file
+      ? (value.dogImage = await uploadToCloudinary(req.file.path))
+      : next(createError("image is required"), 400);
+
+    const dog = await prisma.dog.update({
+      data: value,
+      where: {
+        id: value.id,
+      },
+    });
+
+    res.status(200).json({ message: "updated", dog });
+  } catch (err) {
+    next(err);
+  } finally {
+    fs.unlink(req.file.path);
   }
 };
