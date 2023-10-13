@@ -25,10 +25,24 @@
 1. Get Authenticated User
 (frontend send req ให้ server ตรวจสอบให้ว่า token นี้ใช้ได้ไหม)
 - Method: Get (get ข้อมูล user ที่ login อยู่)
-- Path: /auth/message
+- Path: /auth/me
 - HEADER: AUTHORIZATION Bearer ACCESS_TOKEN
 - RESPONSE:
     200 { user {id: Number, firstName: String, lastName: String, email: String} } ไม่มี password เพื่อความปลอดภัย
     401 { message: String } ในกรณีที่ verify ไม่ผ่าน เช่น token หมดอายุ
     500 { message: String }
 
+///////////////////////////////
+
+---- CRUD ----
+
+1. CREATE a Dog Card
+- Method: POST
+- Path: /dog/create
+- HEADER: AUTHORIZATION Bearer ACCESS_TOKEN
+- BODY = dogImage, dogName, gender, breed?, description?
+- RESPONSE
+    201 { message: String }
+    400 { message: String } 
+    401 { message: String } 
+    500 { message: String } 
