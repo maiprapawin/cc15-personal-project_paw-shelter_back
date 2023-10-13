@@ -25,6 +25,6 @@ exports.createDog = async (req, res, next) => {
   } catch (err) {
     next(err);
   } finally {
-    fs.unlink(req.file.path);
+    fs.unlink(req.file.path); //ลบรูปออกจากโฟล์เดอร์ public
   }
 };

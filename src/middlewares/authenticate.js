@@ -35,6 +35,7 @@ module.exports = async (req, res, next) => {
 
     delete user.password;
     req.user = user;
+
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError" || err.name === "JsonWebTokenError") {
