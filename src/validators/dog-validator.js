@@ -17,3 +17,10 @@ const updateDogSchema = Joi.object({
   description: Joi.string(),
 });
 exports.updateDogSchema = updateDogSchema;
+
+const checkDogIdSchema = Joi.object({
+  dogId: Joi.number().integer().positive().required(),
+  //obj ที่จะ validate มี key ที่ชื่อว่า id
+  //ต้องเป็นตัวเลข จำนวนเต็ม เลขบวก และต้องมีค่า
+});
+exports.checkDogIdSchema = checkDogIdSchema;

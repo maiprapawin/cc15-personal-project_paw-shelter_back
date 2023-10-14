@@ -27,4 +27,12 @@ router.patch(
   dogController.updateDog
 );
 
+// 4. DELETE
+router.delete(
+  "/:dogId",
+  authenticateMiddleware,
+  adminAuthenticateMiddleware,
+  dogController.deleteDog
+);
+
 module.exports = router;

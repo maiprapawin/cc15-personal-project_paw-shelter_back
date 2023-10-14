@@ -2,11 +2,13 @@ const fs = require("fs/promises");
 const {
   createDogSchema,
   updateDogSchema,
+  checkDogIdSchema,
 } = require("../validators/dog-validator");
 const prisma = require("../models/prisma");
 const { uploadToCloudinary } = require("../utils/cloudinary-service");
 const createError = require("../utils/create-error");
 
+/// 1. CREATE
 exports.createDog = async (req, res, next) => {
   try {
     // 1. Validate req.body by Joi (value อยู่ใน req.body)
@@ -32,6 +34,7 @@ exports.createDog = async (req, res, next) => {
   }
 };
 
+/// 2. READ
 exports.readAllDogs = async (req, res, next) => {
   try {
     const dogs = await prisma.dog.findMany();
@@ -41,6 +44,7 @@ exports.readAllDogs = async (req, res, next) => {
   }
 };
 
+/// 3. UPDATE
 exports.updateDog = async (req, res, next) => {
   try {
     const { value, error } = updateDogSchema.validate(req.body);
@@ -48,9 +52,10 @@ exports.updateDog = async (req, res, next) => {
       return next(error);
     }
 
-    req.file
-      ? (value.dogImage = await uploadToCloudinary(req.file.path))
-      : next(createError("image is required"), 400);
+    if (req.file) {
+      value.dogImage = await uploadToCloudinary(req.file.path);
+      fs.unlink(req.file.path);
+    }
 
     const dog = await prisma.dog.update({
       data: value,
@@ -62,7 +67,34 @@ exports.updateDog = async (req, res, next) => {
     res.status(200).json({ message: "updated", dog });
   } catch (err) {
     next(err);
-  } finally {
-    fs.unlink(req.file.path);
+  }
+};
+
+/// 4. DELETE
+exports.deleteDog = async (req, res, next) => {
+  try {
+    const { value, error } = checkDogIdSchema.validate(req.params);
+    if (error) {
+      return next(error);
+    }
+
+    const existDog = await prisma.dog.findFirst({
+      where: {
+        id: value.dogId,
+      },
+    });
+
+    if (!existDog) {
+      return next(createError("cannot delete this dog", 400));
+    }
+
+    await prisma.dog.delete({
+      where: {
+        id: existDog.id,
+      },
+    });
+    res.status(200).json({ message: "deleted" });
+  } catch (err) {
+    next(err);
   }
 };
