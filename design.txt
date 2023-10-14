@@ -80,3 +80,16 @@
     401 { message: String } 
     500 { message: String } 
 
+///////////////////////////////
+
+---- LIKE ----
+
+- Method: POST
+- Path: /dog/:dogId/LIKE
+- HEADER: AUTHORIZATION Bearer ACCESS_TOKEN
+- RESPONSE:
+    201 { message: String }
+    400 { message: String } 
+    401 { message: String } 
+    500 { message: String } 
+

@@ -1,8 +1,9 @@
 const express = require("express");
-const dogController = require("../controllers/dog-controller");
-const authenticateMiddleware = require("../middlewares/authenticate");
 const uploadMiddleware = require("../middlewares/upload");
+const authenticateMiddleware = require("../middlewares/authenticate");
 const adminAuthenticateMiddleware = require("../middlewares/admin-authenticate");
+const dogController = require("../controllers/dog-controller");
+const likeController = require("../controllers/like-controller");
 
 const router = express.Router();
 
@@ -34,5 +35,8 @@ router.delete(
   adminAuthenticateMiddleware,
   dogController.deleteDog
 );
+
+/// LIKE ///
+router.post("/:dogId/like", authenticateMiddleware, likeController.toggleLike);
 
 module.exports = router;
