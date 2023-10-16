@@ -22,7 +22,7 @@ router.get("/read/:dogId", authenticateMiddleware, dogController.readOneDog);
 
 // 3. UPDATE
 router.patch(
-  "/update",
+  "/update/:dogId",
   authenticateMiddleware,
   adminAuthenticateMiddleware,
   uploadMiddleware.single("dogImage"),

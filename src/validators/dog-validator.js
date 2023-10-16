@@ -9,12 +9,12 @@ const createDogSchema = Joi.object({
 exports.createDogSchema = createDogSchema;
 
 const updateDogSchema = Joi.object({
-  id: Joi.number(),
+  id: Joi.number().required(),
   dogImage: Joi.string(),
   dogName: Joi.string().trim(),
   gender: Joi.string(),
-  breed: Joi.string(),
-  description: Joi.string(),
+  breed: Joi.string().allow("").optional(),
+  description: Joi.string().allow("").optional(),
 });
 exports.updateDogSchema = updateDogSchema;
 

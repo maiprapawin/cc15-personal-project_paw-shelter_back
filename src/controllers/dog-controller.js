@@ -69,6 +69,8 @@ exports.readOneDog = async (req, res, next) => {
 
 /// 3. UPDATE
 exports.updateDog = async (req, res, next) => {
+  const dogId = req.params.dogId;
+
   try {
     const { value, error } = updateDogSchema.validate(req.body);
     if (error) {
@@ -83,7 +85,7 @@ exports.updateDog = async (req, res, next) => {
     const dog = await prisma.dog.update({
       data: value,
       where: {
-        id: value.id,
+        id: +dogId,
       },
     });
 
