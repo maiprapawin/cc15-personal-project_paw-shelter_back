@@ -35,10 +35,33 @@ exports.createDog = async (req, res, next) => {
 };
 
 /// 2. READ
+// 2.1 get all dogs
 exports.readAllDogs = async (req, res, next) => {
   try {
     const dogs = await prisma.dog.findMany();
     res.status(200).json({ dogs });
+  } catch (err) {
+    next(err);
+  }
+};
+// 2.2 get a dog
+exports.readOneDog = async (req, res, next) => {
+  try {
+    const { value, error } = checkDogIdSchema.validate(req.params);
+    if (error) {
+      return next(error);
+    }
+
+    const existDog = await prisma.dog.findFirst({
+      where: {
+        id: value.dogId,
+      },
+    });
+    if (!existDog) {
+      return next(createError("dog does not exist", 400));
+    }
+
+    res.status(200).json({ existDog });
   } catch (err) {
     next(err);
   }

@@ -18,6 +18,7 @@ router.post(
 
 // 2. READ
 router.get("/read", authenticateMiddleware, dogController.readAllDogs);
+router.get("/read/:dogId", authenticateMiddleware, dogController.readOneDog);
 
 // 3. UPDATE
 router.patch(
