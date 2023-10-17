@@ -85,7 +85,7 @@
 ---- LIKE ----
 
 - Method: POST
-- Path: /dog/:dogId/LIKE
+- Path: /dog/:dogId/like
 - HEADER: AUTHORIZATION Bearer ACCESS_TOKEN
 - RESPONSE:
     201 { message: String }

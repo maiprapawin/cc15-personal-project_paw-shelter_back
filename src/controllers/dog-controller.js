@@ -11,12 +11,12 @@ const createError = require("../utils/create-error");
 /// 1. CREATE
 exports.createDog = async (req, res, next) => {
   try {
-    // 1. Validate req.body by Joi (value อยู่ใน req.body)
+    // 2.1 Validate req.body by Joi (value อยู่ใน req.body)
     const { value, error } = createDogSchema.validate(req.body);
     if (error) {
       return next(error);
     }
-    // 2. Check dogImage (ถ้ามีไฟล์รูป จะอยู่่ใน req.file ซึ่งเป็น obj ที่มี key ชื่อ path)
+    // 2.2 Check dogImage (ถ้ามีไฟล์รูป จะอยู่่ใน req.file ซึ่งเป็น obj ที่มี key ชื่อ path)
     // ถ้ามีรูป = 1. อัพรูปขึ้น cloudinary 2. เพิ่ม key ชื่อ dogImage เข้าไปใน obj value
     // req.file
     //   ? (value.dogImage = await uploadToCloudinary(req.file.path)(
@@ -29,9 +29,16 @@ exports.createDog = async (req, res, next) => {
       fs.unlink(req.file.path);
     }
 
-    // 3. Create into db
+    // 2.3 Create into db
     const dog = await prisma.dog.create({
       data: value,
+      include: {
+        Likes: {
+          select: {
+            userId: true,
+          },
+        },
+      },
     });
     res.status(201).json({ message: "created", dog });
   } catch (err) {
@@ -43,13 +50,22 @@ exports.createDog = async (req, res, next) => {
 // 2.1 get all dogs
 exports.readAllDogs = async (req, res, next) => {
   try {
-    const dogs = await prisma.dog.findMany();
+    const dogs = await prisma.dog.findMany({
+      include: {
+        Likes: {
+          select: {
+            userId: true,
+          },
+        },
+      },
+    });
     res.status(200).json({ dogs });
   } catch (err) {
     next(err);
   }
 };
 // 2.2 get a dog
+
 exports.readOneDog = async (req, res, next) => {
   try {
     const { value, error } = checkDogIdSchema.validate(req.params);
